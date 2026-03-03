@@ -1,0 +1,18 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# Excel temporary files
+~$*.xlsx
