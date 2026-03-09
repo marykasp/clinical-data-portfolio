@@ -1,6 +1,6 @@
 CREATE TABLE departments (
   department_id INTEGER PRIMARY KEY,
-  department_name TEXT,
+  department_name TEXT
 );
 
 CREATE TABLE trials (
@@ -10,7 +10,7 @@ CREATE TABLE trials (
   department_id INTEGER,
   start_date DATE,
   FOREIGN KEY (department_id) REFERENCES departments(department_id)
-)
+);
 
 CREATE TABLE patients (
   patient_id INTEGER PRIMARY KEY,
@@ -18,7 +18,7 @@ CREATE TABLE patients (
   enrollment_date DATE,
   status TEXT,
   FOREIGN KEY (trial_id) REFERENCES trials(trial_id)
-)
+);
 
 CREATE TABLE visits(
   visit_id INTEGER PRIMARY KEY,
@@ -26,5 +26,4 @@ CREATE TABLE visits(
   visit_date DATE,
   visit_timepoint TEXT,
   FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
-)
-
+);
