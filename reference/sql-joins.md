@@ -150,3 +150,45 @@ WHERE Customers.city = 'New York';
 | **customer_name** | **city** | **product_name** |
 | ----------------- | -------- | ---------------- |
 | Alice             | New York | Laptop           |
+
+## GROUP BY
+
+In the previous chapter, you learned to use aggregate functions to calculate summary values.
+
+For example, you can determine the average purchase amount from a table:
+
+```sql
+-- Return the average purchase amount of all customers
+
+SELECT AVG(purchase_amount)
+FROM Customers;
+```
+
+What if you're asked to find the average purchase amount by country? Simply using the AVG() function isn't enough.
+
+This is where the GROUP BY clause comes in handy in SQL. It helps you answer questions like:
+
+What is the average purchase amount of customers in each country?
+What are the highest and lowest purchase amounts in each country?
+
+Let's try grouping the data from the Customers table by different countries.
+
+```sql
+-- Group data by different country
+
+SELECT country, purchase_amount
+FROM Customers
+GROUP BY country;
+If you run the code, the output will be:
+```
+
+country purchase_amount
+Canada 6000
+UK 2000
+USA 1000
+
+The output shows the country and purchase amount of the first customer in each country, but this isn't a meaningful summary.
+
+Therefore, the `GROUP BY` clause is almost always used in conjunction with aggregate functions such as SUM(), MIN(), COUNT(), etc., to summarize data.
+
+Let's look at examples to see how GROUP BY works with aggregate functions.
