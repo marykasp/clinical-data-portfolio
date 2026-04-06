@@ -23,7 +23,7 @@ FROM
   visits
 GROUP BY
   patient_id
-WHERE
+HAVING
   total_visits > 2
 ORDER BY
   total_visits DESC;
