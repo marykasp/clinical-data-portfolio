@@ -1,0 +1,4 @@
+.mode table
+.headers on
+.nullvalue NULL
+.timer off
