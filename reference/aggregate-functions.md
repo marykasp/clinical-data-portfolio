@@ -115,3 +115,161 @@ SELECT SUM(column_1) AS column_name_1, AVG(column_2) AS column_name_2, ...
 ## Resources
 
 - [SQL aggregate functions](https://www.w3schools.com/sql/sql_aggregate_functions.asp)
+
+# Group Summary Statistics with SQL
+
+### Counting rows by group
+
+```sql
+SELECT group_column, COUNT(*) AS num_row
+  FROM table
+ GROUP BY group_column;
+```
+
+### Summing a computed column by group
+
+```sql
+SELECT group_column, SUM(column_1 * column_2) AS total
+  FROM table
+ GROUP BY group_column;
+```
+
+### Computing statistics with grouped data under conditions
+
+```sql
+SELECT group_column, COUNT(*) AS num_row, AVG(column) AS avg_column
+  FROM table
+ WHERE conditions
+ GROUP BY group_column;
+```
+
+### Grouping rows and ordering the result
+
+```sql
+SELECT group_column,
+       COUNT(*) AS num_row,
+       SUM(column) AS sum_column
+  FROM table
+ GROUP BY group_column
+ ORDER BY sum_column DESC,
+          num_row DESC
+ LIMIT n;
+```
+
+### Writing a comprehensive query
+
+```sql
+SELECT billing_city,
+       COUNT(*) AS num_row,
+       SUM(total) AS overall_sale,
+       MIN(total) AS min_sale,
+       AVG(total) AS avg_sale,
+       MAX(total) AS max_sale
+  FROM invoice
+ WHERE billing_country = 'Canada'
+    OR billing_country = 'France'
+ GROUP BY billing_city
+ ORDER BY overall_sale DESC, num_row DESC
+ LIMIT 3;
+```
+
+---
+
+## Concepts
+
+- **Aggregate functions** allow operations combining several rows over groups.
+- `GROUP BY` splits rows into groups before the aggregate function is applied.
+
+### Clause order (written)
+
+```
+SELECT > FROM > WHERE > GROUP BY > ORDER BY > LIMIT
+```
+
+### Clause execution order
+
+```
+FROM > WHERE > GROUP BY > SELECT > ORDER BY > LIMIT
+```
+
+---
+
+## Resources
+
+- [SQL aggregate functions](https://www.w3schools.com/sql/sql_aggregate_functions.asp)
+
+# Multiple Group Summary Statistics with SQL
+
+### Counting rows grouped by several columns
+
+```sql
+SELECT group_column_1, group_column_2, COUNT(*) AS num_row
+  FROM table
+ GROUP BY group_column_1, group_column_2;
+```
+
+### Computing statistics grouped by several columns
+
+```sql
+SELECT group_column_1, group_column_2,
+       AVG(col) AS avg_col,
+       MIN(col) AS min_col,
+       MAX(col) AS max_col
+  FROM table
+ GROUP BY group_column_1, group_column_2;
+```
+
+### Adding conditions on an aggregated column (`HAVING`)
+
+```sql
+SELECT group_column_1, group_column_2,
+       AVG(col) AS avg_col,
+       MIN(col) AS min_col,
+       MAX(col) AS max_col
+  FROM table
+ GROUP BY group_column_1, group_column_2
+HAVING condition_on_aggregated_columns;
+```
+
+### Combining `WHERE` and `HAVING` clauses
+
+```sql
+SELECT group_column_1, group_column_2,
+       AVG(col) AS avg_col,
+       MIN(col) AS min_col,
+       MAX(col) AS max_col
+  FROM table
+ WHERE conditions
+ GROUP BY group_column_1, group_column_2
+HAVING condition_on_aggregated_columns;
+```
+
+> **`WHERE` vs `HAVING`**
+>
+> - `WHERE` filters rows _before_ grouping.
+> - `HAVING` filters groups _after_ aggregation — use it when the condition involves an aggregate function (e.g. `HAVING AVG(col) > 10`).
+
+---
+
+## Concepts
+
+- Aggregate functions allow operations combining several rows over groups.
+- Rows can be grouped by **multiple columns** simultaneously.
+
+### Clause order (written)
+
+```
+SELECT > FROM > WHERE > GROUP BY > HAVING > ORDER BY > LIMIT
+```
+
+### Clause execution order
+
+```
+FROM > WHERE > GROUP BY > HAVING > SELECT > ORDER BY > LIMIT
+```
+
+---
+
+## Resources
+
+- [SQL aggregate functions](https://www.w3schools.com/sql/sql_aggregate_functions.asp)
