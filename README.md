@@ -36,6 +36,11 @@ The simulated dataset includes tables such as:
 
 The schema was intentionally designed to mirror common clinical research structures.
 
+## Database Schema
+
+[View Schema Diagram](docs/clinical_db_schema.pdf)
+![Database Schema](docs/clinical_db_schema.png)
+
 ---
 
 ## 🔍 Example Analytical Questions Answered
