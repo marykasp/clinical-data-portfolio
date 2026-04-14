@@ -27,7 +27,7 @@ GROUP BY
 
 -- ============================================
 -- Exercise 3
--- Find departments that have more than 1 trial.
+-- Find departments that have more than 2 trial.
 -- Hint: use HAVING after grouping
 -- ============================================
 SELECT
@@ -55,6 +55,6 @@ FROM
 GROUP BY
   departments.department_name
 ORDER BY
-  COUNT(*) ASC
+  COUNT(*) DESC
 LIMIT
   1;
