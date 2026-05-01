@@ -58,6 +58,7 @@ GROUP BY test_name;
 -- How many distinct patients have had at least one lab result collected?
 -- Table: lab_results
 -- Hint: COUNT(DISTINCT patient_id)
+-- !15 distinct patients with lab results
 SELECT COUNT(DISTINCT patient_id)
 FROM lab_results;
 
