@@ -95,6 +95,7 @@ WHERE phase IN ('Phase I', 'Phase II');
 -- point in time.
 -- ============================================
 
+-- ============================================
 -- Exercise 7
 -- What is the total CRP measured across all patients
 -- who are currently Active in the program?
@@ -108,14 +109,23 @@ FROM lab_results
 JOIN patients
   ON lab_results.patient_id = patients.patient_id
 WHERE status = 'Active' AND test_name = "CRP";
+-- ============================================
 
+-- ============================================
 -- Exercise 8
 -- What is the total LDH recorded per patient across all their visits?
 -- LDH is a marker of tissue breakdown and tumor burden — patients
 -- with a high cumulative LDH sum may have had more aggressive disease.
 -- Table: lab_results
 -- Hint: WHERE test_name = 'LDH', GROUP BY patient_id, SUM(result_value)
+-- ============================================
+SELECT patient_id,
+  SUM(result_value) AS total_LDH 
+FROM lab_results
+WHERE test_name = 'LDH'
+GROUP BY patient_id;
 
+-- ============================================
 -- Exercise 9
 -- What is the total BNP recorded across all Baseline visits?
 -- Summing BNP at Baseline gives a picture of how much collective
@@ -123,7 +133,14 @@ WHERE status = 'Active' AND test_name = "CRP";
 -- Tables: lab_results, visits
 -- Hint: JOIN on visit_id, WHERE test_name = 'BNP'
 --       AND visit_timepoint = 'Baseline', then SUM(result_value)
+-- ============================================
+SELECT SUM(result_value) AS total_BNP_at_baseline
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+WHERE test_name = 'BNP' AND visit_timepoint = 'Baseline';
 
+-- ============================================
 -- Exercise 10
 -- What is the total CRP and total ESR recorded per patient,
 -- across all their visits combined?
@@ -133,7 +150,14 @@ WHERE status = 'Active' AND test_name = "CRP";
 -- Hint: you will need two separate WHERE filters — consider
 --       running this as two queries, or use conditional SUM:
 --       SUM(CASE WHEN test_name = 'CRP' THEN result_value ELSE 0 END)
+-- ============================================
+SELECT patient_id,
+  SUM(CASE WHEN test_name = 'CRP' THEN result_value ELSE 0 END) AS total_crp,
+  SUM(CASE WHEN test_name = 'ESR' THEN result_value ELSE 0 END) AS total_esr
+FROM lab_results
+GROUP BY patient_id;
 
+-- ============================================
 -- Exercise 11
 -- What is the total LDL recorded per trial?
 -- Trials with a higher total LDL across patients may indicate
@@ -141,7 +165,19 @@ WHERE status = 'Active' AND test_name = "CRP";
 -- Tables: lab_results, patients
 -- Hint: JOIN lab_results to patients on patient_id,
 --       WHERE test_name = 'LDL', GROUP BY trial_id, SUM(result_value)
+-- ============================================
+SELECT patients.trial_id, 
+  trials.trial_name,
+  SUM(result_value) AS total_ldl
+FROM lab_results
+JOIN patients
+  ON lab_results.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE test_name = 'LDL'
+GROUP BY patients.trial_id, trials.trial_name;
 
+-- ============================================
 -- Exercise 12
 -- Compare the total Hemoglobin recorded at Baseline versus
 -- at Cycle 2 Day 1 across all oncology patients.
@@ -150,7 +186,16 @@ WHERE status = 'Active' AND test_name = "CRP";
 -- Tables: lab_results, visits
 -- Hint: JOIN on visit_id, WHERE test_name = 'Hemoglobin',
 --       GROUP BY visit_timepoint, SUM(result_value)
+-- ============================================
+SELECT visit_timepoint, 
+  SUM(result_value) AS total_hemoglobin
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+WHERE test_name = 'Hemoglobin' AND visit_timepoint IN ('Baseline', 'Cycle 2 Day 1')
+GROUP BY visit_timepoint;
 
+-- ============================================
 -- Exercise 13
 -- What is the total result_value for all inflammatory markers
 -- (CRP, ESR, RF) collected from patients enrolled in Phase II trials only?
@@ -160,4 +205,13 @@ WHERE status = 'Active' AND test_name = "CRP";
 -- Hint: JOIN lab_results → patients → trials,
 --       WHERE test_name IN ('CRP', 'ESR', 'RF')
 --       AND phase = 'Phase II', then SUM(result_value)
-
+-- ============================================
+SELECT test_name, 
+  SUM(result_value) AS total_value_inflammatory_markers
+FROM lab_results
+JOIN patients
+  ON lab_results.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE test_name IN ('CRP', 'ESR', 'RF') AND phase = 'Phase II'
+GROUP BY test_name;
