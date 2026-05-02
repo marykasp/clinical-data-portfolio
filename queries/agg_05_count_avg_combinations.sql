@@ -51,19 +51,44 @@ GROUP BY department_name;
 -- the number of distinct departments involved,
 -- and the date of the earliest trial start.
 -- Tables: trials
+SELECT phase,
+  COUNT(DISTINCT department_id) AS num_of_departments,
+  MIN(start_date) AS earliest_trial_start,
+  COUNT(*) AS num_of_trials
+FROM trials
+GROUP BY phase;
 
 -- Exercise 5
 -- For each enrollment status, show the count of patients
 -- and the earliest and latest enrollment dates for that group.
 -- Tables: patients
+SELECT status,
+  COUNT(*) AS total_patients,
+  MIN(enrollment_date) AS earliest_enrollment_date,
+  MAX(enrollment_date) AS recent_enrollment_date
+FROM patients
+GROUP BY status;
 
 -- Exercise 6
 -- For each visit timepoint, show how many times it has occurred
 -- and the date range it spans (earliest to latest visit date).
 -- Tables: visits
+SELECT visit_timepoint,
+  COUNT(*) AS num_visits,
+  MIN(visit_date) AS earliest,
+  MAX(visit_date) AS latest
+FROM visits
+GROUP BY visit_timepoint;
 
 -- Exercise 7
 -- Show a full patient visit summary: for each patient,
 -- the total visits, first visit, last visit, and number of
 -- distinct timepoints they have completed.
 -- Tables: visits
+SELECT patient_id,
+  COUNT(*) AS total_visits,
+  MIN(visit_date) AS first_visit,
+  MAX(visit_date) AS last_visit,
+  COUNT(DISTINCT visit_timepoint) AS num_timepoints
+FROM visits
+GROUP BY patient_id;
