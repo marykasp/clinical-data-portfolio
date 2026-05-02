@@ -102,23 +102,34 @@ LEFT JOIN trials
 -- Show all trials with the number of patients enrolled in each,
 -- including trials that currently have zero patients.
 -- Tables: trials, patients
--- Hint: FROM trials LEFT JOIN patients ON trials.trial_id = patients.trial_id
---       GROUP BY trial_name
---       COUNT(patients.patient_id) — not COUNT(*) — to get 0 for empty trials
+SELECT trials.trial_name,
+  COUNT(patients.patient_id) AS patients_enrolled
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY trials.trial_name;
 
 -- Exercise 7
 -- Show all departments with the number of trials each is running,
 -- including any departments that have no trials.
 -- Tables: departments, trials
--- Hint: FROM departments LEFT JOIN trials ON departments.department_id = trials.department_id
---       GROUP BY department_name, COUNT(trials.trial_id)
+SELECT departments.department_name,
+  COUNT(trials.trial_id) AS num_of_trials
+FROM departments
+LEFT JOIN trials
+  ON departments.department_id = trials.department_id
+GROUP BY departments.department_name;
 
 -- Exercise 8
 -- Show all patients with the total number of visits they have attended,
 -- including patients who have had zero visits.
 -- Tables: patients, visits
--- Hint: FROM patients LEFT JOIN visits ON patients.patient_id = visits.patient_id
---       GROUP BY patient_id, COUNT(visits.visit_id)
+SELECT patients.patient_id,
+  COUNT(visits.visit_id) AS total_visits
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.visit_id
+GROUP BY patients.patient_id;
 
 -- -----------------------
 -- LEFT JOIN to find missing data
