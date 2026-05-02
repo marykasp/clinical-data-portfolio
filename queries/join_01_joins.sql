@@ -83,20 +83,42 @@ JOIN visits
 -- Exercise 6
 -- Show each patient with their trial name and the department running it.
 -- Tables: patients, trials, departments
--- Hint: JOIN trials first, then JOIN departments on trials.department_id
+SELECT patients.patient_id AS patient,
+  trials.trial_name,
+  departments.department_name
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+JOIN departments
+  ON departments.department_id = trials.department_id;
 
 -- Exercise 7
 -- Show each visit alongside the patient's age and the name of their trial.
 -- Coordinators use this to check whether visit activity aligns with
 -- expected patient demographics per study.
 -- Tables: visits, patients, trials
--- Hint: JOIN patients, then JOIN trials on patients.trial_id
+SELECT visit_timepoint,
+  patients.age AS patients_age,
+  trials.trial_name
+FROM visits
+JOIN patients
+  ON patients.patient_id = visits.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 8
 -- Show each lab result with the test name, result value, the visit
 -- timepoint it was collected at, and the patient's enrollment status.
 -- Tables: lab_results, visits, patients
--- Hint: JOIN visits on lab_results.visit_id, then JOIN patients on lab_results.patient_id
+SELECT result_value,
+  lab_results.test_name,
+  visits.visit_timepoint,
+  patients.status AS enrollment_status
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+JOIN patients
+  ON visits.patient_id = patients.patient_id;
 
 -- -----------------------
 -- 4-Table Joins
@@ -108,10 +130,37 @@ JOIN visits
 -- This is the kind of combined view a clinical data manager would
 -- use to audit lab data in context.
 -- Tables: lab_results, visits, patients, trials
--- Hint: JOIN visits, JOIN patients, JOIN trials — each on their respective key
+SELECT lab_results.result_value,
+  lab_results.test_name,
+  lab_results.unit,
+  visits.visit_timepoint,
+  patients.status,
+  trials.trial_name
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 10
 -- Show each lab result with: test name, result value, visit timepoint,
 -- patient age, trial name, and department name.
 -- Tables: lab_results, visits, patients, trials, departments
--- Hint: chain all 5 tables together using their foreign keys
+SELECT 
+  lab_results.test_name,
+  lab_results.result_value,
+  visits.visit_timepoint,
+  patients.age,
+  trials.trial_name,
+  departments.department_name
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+JOIN departments
+  ON trials.department_id = departments.department_id;
