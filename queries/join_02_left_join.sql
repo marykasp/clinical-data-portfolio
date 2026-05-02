@@ -102,6 +102,8 @@ LEFT JOIN trials
 -- Show all trials with the number of patients enrolled in each,
 -- including trials that currently have zero patients.
 -- Tables: trials, patients
+-- use COUNT(column) - counts only NON-NULL values, returns 0 if patient_id is NULL
+-- COUNT(*) counts the row itself returns 1 even if there is no patient
 SELECT trials.trial_name,
   COUNT(patients.patient_id) AS patients_enrolled
 FROM trials
@@ -145,21 +147,34 @@ GROUP BY patients.patient_id;
 -- For Active patients this should never be true —
 -- any result here is a data quality flag worth investigating.
 -- Tables: patients, visits
--- Hint: FROM patients LEFT JOIN visits ON patients.patient_id = visits.patient_id
---       WHERE visits.visit_id IS NULL
+SELECT patients.patient_id AS patients_with_no_visits,
+  patients.status,
+  patients.enrollment_date
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+WHERE visits.patient_id IS NULL;
 
 -- Exercise 10
 -- Which visits have no lab results recorded?
 -- Visits that require a blood draw per protocol but show no
 -- lab results may indicate a missed or incomplete procedure.
 -- Tables: visits, lab_results
--- Hint: FROM visits LEFT JOIN lab_results ON visits.visit_id = lab_results.visit_id
---       WHERE lab_results.lab_id IS NULL
+SELECT visits.visit_id,
+  visits.visit_date
+FROM visits
+LEFT JOIN lab_results
+  ON visits.visit_id = lab_results.visit_id
+WHERE lab_results.visit_id IS NULL;
 
 -- Exercise 11
 -- Which trials currently have no patients enrolled?
 -- A trial with zero enrollment may have just opened,
 -- or may signal a recruitment problem that needs attention.
 -- Tables: trials, patients
--- Hint: FROM trials LEFT JOIN patients ON trials.trial_id = patients.trial_id
---       WHERE patients.patient_id IS NULL
+SELECT trials.trial_name,
+  trials.phase
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+WHERE patients.patient_id IS NULL;
