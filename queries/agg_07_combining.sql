@@ -1,0 +1,81 @@
+-- ============================================
+-- Aggregation Practice: Combining Multiple Aggregate Functions
+-- ============================================
+-- You can use COUNT, SUM, AVG, MIN, and MAX together
+-- in a single SELECT. Each one operates independently
+-- on the same group.
+--
+-- This is where aggregation becomes genuinely useful
+-- for clinical reporting — one query can answer several
+-- questions about a group at once.
+-- ============================================
+
+-- Exercise 1
+-- For each trial, show:
+--   - total patients enrolled
+--   - average patient age
+--   - average patient weight (kg)
+--   - earliest enrollment date
+--   - most recent enrollment date
+-- Table: patients
+-- Hint: GROUP BY trial_id, use COUNT, AVG, MIN, MAX
+
+-- Exercise 2
+-- For each patient, show a visit summary:
+--   - total number of visits
+--   - total time spent on visits (minutes)
+--   - average visit duration
+--   - date of first visit
+--   - date of most recent visit
+-- Table: visits
+-- Hint: GROUP BY patient_id
+
+-- Exercise 3
+-- For each lab test, show a result summary:
+--   - how many results have been collected
+--   - average result value
+--   - lowest result value
+--   - highest result value
+-- Useful for spotting tests where values are
+-- consistently above or below normal range.
+-- Table: lab_results
+-- Hint: GROUP BY test_name
+
+-- Exercise 4
+-- For each trial phase, show:
+--   - number of trials
+--   - total target enrollment across all trials in that phase
+--   - average target enrollment per trial
+--   - earliest trial start date
+-- Table: trials
+-- Hint: GROUP BY phase
+
+-- Exercise 5
+-- For each department, show:
+--   - number of trials
+--   - total target enrollment
+--   - average age of all enrolled patients across their trials
+-- Tables: departments, trials, patients
+-- Hint: JOIN all three tables, GROUP BY department_name
+
+-- Exercise 6
+-- For each enrollment status, show:
+--   - number of patients
+--   - average age
+--   - average weight (kg)
+--   - earliest and latest enrollment date
+-- This gives a demographic snapshot of who completes,
+-- withdraws, or fails screening.
+-- Table: patients
+-- Hint: GROUP BY status
+
+-- Exercise 7
+-- For each visit timepoint, show:
+--   - how many visits occurred
+--   - average duration
+--   - shortest duration
+--   - longest duration
+-- Flag any timepoint where the min duration seems
+-- suspiciously short (possible data entry error).
+-- Table: visits
+-- Hint: GROUP BY visit_timepoint
