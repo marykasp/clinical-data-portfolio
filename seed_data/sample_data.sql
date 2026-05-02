@@ -152,7 +152,19 @@ VALUES
   (1090, 117, '2022-09-20', 'Completed',      51, 75.3),
   (1091, 117, '2022-10-05', 'Active',         37, 68.9),
   (1092, 117, '2022-10-25', 'Active',         48, 79.4),
-  (1093, 117, '2022-11-10', 'Withdrawn',      55, 84.1);
+  (1093, 117, '2022-11-10', 'Withdrawn',      55, 84.1),
+  -- Newly enrolled patients — no visits scheduled yet
+  -- These rows demonstrate LEFT JOIN vs INNER JOIN:
+  -- a LEFT JOIN from patients will show these with NULL visit columns;
+  -- an INNER JOIN will silently exclude them.
+  (1094, 101, '2024-10-15', 'Active',         56, 83.2),  -- ONC-201: awaiting baseline
+  (1095, 103, '2024-10-22', 'Active',         64, 87.4),  -- CardioRisk: awaiting baseline
+  (1096, 104, '2024-11-01', 'Active',         33, 63.1),  -- AutoImmune: awaiting baseline
+  (1097, 107, '2024-11-08', 'Active',         48, 76.9),  -- NEURO-101 ALS: awaiting baseline
+  (1098, 110, '2024-11-12', 'Active',         30, 57.8),  -- IMM-301 Lupus: awaiting baseline
+  (1099, 113, '2024-11-20', 'Active',         60, 81.3),  -- GBM Immunotherapy: awaiting baseline
+  (1100, 116, '2024-12-01', 'Active',         44, 68.5),  -- RHEUM-201 RA: awaiting baseline
+  (1101, 101, '2024-12-10', 'Active',         50, 77.6);  -- ONC-201: awaiting baseline
 
 -- =========================
 -- Visits
@@ -625,4 +637,3 @@ VALUES
   -- Patient 1089 | Visit 281 Month 12
   (77, 1089, 281, 'CRP',           6.8,'mg/L'),
   (78, 1089, 281, 'ESR',          22.0,'mm/hr');
-
