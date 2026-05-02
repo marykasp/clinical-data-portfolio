@@ -17,3 +17,4 @@ Thumbs.db
 
 # Excel temporary files
 ~$*.xlsx
+docs/prompts.md
