@@ -33,7 +33,6 @@
 -- In a real trial this flags enrolled patients who are
 -- overdue for their first appointment.
 -- Tables: patients, visits
--- !: all patients have a visit so similar to INNER JOINS
 SELECT patients.patient_id,
   patients.status,
   visits.visit_date,
@@ -48,21 +47,47 @@ LEFT JOIN visits
 -- Patients with no labs may have been missed during a visit
 -- or are still awaiting results.
 -- Tables: patients, lab_results
+SELECT patients.patient_id,
+  lab_results.result_value,
+  lab_results.test_name,
+  lab_results.unit
+FROM patients
+LEFT JOIN lab_results
+  ON patients.patient_id = lab_results.patient_id
+ORDER BY lab_results.test_name IS NULL, patients.patient_id;
 
 -- Exercise 3
 -- Show all visits and any lab results recorded at that visit,
 -- including visits where no labs were drawn.
 -- Tables: visits, lab_results
+SELECT visits.visit_id,
+  visits.visit_date,
+  visits.visit_timepoint,
+  lab_results.result_value,
+  lab_results.test_name
+FROM visits
+LEFT JOIN lab_results
+  ON visits.visit_id = lab_results.visit_id;
 
 -- Exercise 4
 -- Show all trials and any patients enrolled in them,
 -- including trials that currently have zero patients.
 -- Tables: trials, patients
+SELECT trials.trial_name,
+  patients.patient_id
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id;
 
 -- Exercise 5
 -- Show all departments and any trials they are running,
 -- including departments with no trials assigned.
 -- Tables: departments, trials
+SELECT departments.department_name,
+  trials.trial_name
+FROM departments
+LEFT JOIN trials
+  ON departments.department_id = trials.department_id;
 
 -- -----------------------
 -- LEFT JOIN with aggregation
