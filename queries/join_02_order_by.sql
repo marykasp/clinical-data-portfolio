@@ -63,12 +63,18 @@ ORDER BY result_value DESC;
 -- then by age descending within each status group.
 -- Table: patients
 -- Hint: ORDER BY status ASC, age DESC
+SELECT *
+FROM patients
+ORDER BY status, age DESC;
 
 -- Exercise 7
 -- List all visits sorted by visit timepoint alphabetically,
 -- then by visit date ascending within each timepoint.
 -- Table: visits
 -- Hint: ORDER BY visit_timepoint ASC, visit_date ASC
+SELECT *
+FROM visits
+ORDER BY visit_timepoint, visit_date;
 
 -- -----------------------
 -- ORDER BY with a JOIN
@@ -78,13 +84,26 @@ ORDER BY result_value DESC;
 -- List all patients with their trial name,
 -- sorted by trial name alphabetically, then by enrollment date.
 -- Tables: patients, trials
--- Hint: JOIN trials, ORDER BY trial_name ASC, enrollment_date ASC
+SELECT patients.patient_id,
+  patients.enrollment_date,
+  patients.status,
+  trials.trial_name
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+ORDER BY trials.trial_name ASC, enrollment_date ASC;
 
 -- Exercise 9
 -- List all lab results with the visit timepoint they were collected at,
 -- sorted by test name alphabetically, then by result value descending.
 -- Tables: lab_results, visits
--- Hint: JOIN visits, ORDER BY test_name ASC, result_value DESC
+SELECT lab_results.result_value,
+  lab_results.test_name,
+  visits.visit_timepoint
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+ORDER BY test_name ASC, result_value DESC;
 
 -- Exercise 10
 -- List all visits with the patient's trial name and department name,
@@ -92,4 +111,16 @@ ORDER BY result_value DESC;
 -- A department coordinator would use this to see their most recent
 -- visit activity at a glance.
 -- Tables: visits, patients, trials, departments
--- Hint: chain the joins, ORDER BY department_name ASC, visit_date DESC
+SELECT visits.visit_timepoint,
+  visits.visit_date,
+  trials.trial_name,
+  departments.department_name,
+  patients.patient_id
+FROM visits
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON trials.trial_id = patients.trial_id
+JOIN departments
+  ON trials.department_id = departments.department_id
+ORDER BY departments.department_name ASC, visits.visit_date DESC;
