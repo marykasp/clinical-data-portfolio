@@ -86,13 +86,28 @@ LIMIT 5;
 -- Exercise 7
 -- Show the 5 most recently enrolled patients along with their trial name.
 -- Tables: patients, trials
--- Hint: JOIN trials, ORDER BY enrollment_date DESC, LIMIT 5
+SELECT patients.patient_id,
+  trials.trial_name
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+ORDER BY patients.enrollment_date DESC
+LIMIT 5;
 
 -- Exercise 8
 -- Show the 3 longest visits along with the patient's trial name
 -- and visit timepoint.
 -- Tables: visits, patients, trials
--- Hint: JOIN patients and trials, ORDER BY duration_minutes DESC, LIMIT 3
+SELECT visits.duration_minutes,
+  trials.trial_name,
+  visits.visit_timepoint
+FROM visits
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+ORDER BY duration_minutes DESC
+LIMIT 3;
 
 -- Exercise 9
 -- Show the single highest BNP result recorded, along with the
@@ -100,10 +115,30 @@ LIMIT 5;
 -- BNP is a cardiac stress marker — the highest value identifies
 -- the most at-risk cardiac patient in the dataset.
 -- Tables: lab_results, patients, trials, visits
--- Hint: WHERE test_name = 'BNP', JOIN all relevant tables,
---       ORDER BY result_value DESC, LIMIT 1
+SELECT lab_results.result_value,
+  lab_results.test_name,
+  patients.age,
+  trials.trial_name,
+  visits.visit_timepoint
+FROM lab_results
+JOIN visits
+  ON lab_results.visit_id = visits.visit_id
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE test_name = 'BNP'
+ORDER BY result_value DESC
+LIMIT 1;
 
 -- Exercise 10
 -- Show the 5 earliest trials to start, along with their department name.
 -- Tables: trials, departments
--- Hint: JOIN departments, ORDER BY start_date ASC, LIMIT 5
+SELECT  trials.trial_name,
+  departments.department_name,
+  trials.start_date
+FROM trials
+JOIN departments
+  ON trials.department_id = trials.department_id
+ORDER BY start_date ASC
+LIMIT 5;
