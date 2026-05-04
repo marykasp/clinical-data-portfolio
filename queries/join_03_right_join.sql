@@ -93,6 +93,17 @@ RIGHT JOIN departments
 -- Write it first as a RIGHT JOIN (patients RIGHT JOIN trials),
 -- then rewrite it as a LEFT JOIN that returns the same result.
 -- Tables: patients, trials
+SELECT trials.trial_name,
+  patients.patient_id
+FROM patients
+RIGHT JOIN trials
+  ON trials.trial_id = patients.trial_id;
+
+SELECT trials.trial_name,
+  patients.patient_id
+FROM patients
+LEFT JOIN trials
+  ON trials.trial_id = patients.trial_id;
 
 -- Exercise 6
 -- Write a query that shows all patients with their visit dates.
@@ -111,6 +122,11 @@ RIGHT JOIN departments
 -- Tables: patients, trials
 -- Hint: FROM patients RIGHT JOIN trials ON patients.trial_id = trials.trial_id
 --       WHERE patients.patient_id IS NULL
+SELECT trials.trial_name
+FROM patients
+RIGHT JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE patients.patient_id IS NULL;
 
 -- Exercise 8
 -- Which patients have no visits recorded?
@@ -120,3 +136,8 @@ RIGHT JOIN departments
 -- Hint: FROM visits RIGHT JOIN patients ON visits.patient_id = patients.patient_id
 --       WHERE visits.visit_id IS NULL
 --       Compare to join_02_left_join.sql Exercise 9 — same result.
+SELECT patients.patient_id AS patients_with_no_visits
+FROM visits
+RIGHT JOIN patients
+  ON visits.patient_id = patients.patient_id
+WHERE visits.patient_id IS NULL;

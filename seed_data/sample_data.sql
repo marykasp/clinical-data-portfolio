@@ -34,7 +34,12 @@ VALUES
   (114, 'NEUROONC-201 Brain Metastasis Response Trial',   'Phase II',  6, '2023-10-01', 30),
   (115, 'CARDIONC-101 Cardiac Safety in Oncology Study',  'Phase II',  7, '2024-01-01', 25),
   (116, 'RHEUM-201 RA Biologic Dose Study',               'Phase II',  8, '2023-05-01', 45),
-  (117, 'RHEUM-301 Psoriatic Arthritis Maintenance Trial','Phase III', 8, '2022-08-01', 90);
+  (117, 'RHEUM-301 Psoriatic Arthritis Maintenance Trial','Phase III', 8, '2022-08-01', 90),
+  -- Trials with no patients yet — demonstrates LEFT JOIN returning NULLs on the patients side
+  (118, 'ONC-601 Novel CAR-T Pilot Study',               'Phase I',   1, '2025-03-01', 8),
+  (119, 'RHEUM-401 Juvenile Arthritis Biologic Study',   'Phase II',  8, '2025-04-15', 30),
+  -- Trial with no department assigned — demonstrates LEFT JOIN on the departments side
+  (120, 'PILOT-001 Cross-Departmental Biomarker Study',  'Phase I',   NULL, '2025-05-01', 12);
 
 -- =========================
 -- Patients
