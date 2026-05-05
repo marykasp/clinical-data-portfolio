@@ -55,11 +55,15 @@ FROM visits;
 -- Show each trial's name and phase combined into one column,
 -- separated by ' | ', e.g. 'CardioRisk Reduction Study | Phase II'.
 -- Table: trials
+SELECT trial_name || ' | ' || phase
+FROM trials;
 
 -- Exercise 6
 -- Show each lab result as 'test_name (unit)',
 -- e.g. 'WBC (K/uL)' or 'BNP (pg/mL)'.
 -- Table: lab_results
+SELECT test_name || ' ' || '(' || unit || ')'
+FROM lab_results;
 
 -- Exercise 7
 -- Show each patient as 'Patient 1001 - Active'
@@ -67,6 +71,8 @@ FROM visits;
 -- Note: patient_id is an integer — wrap it with CAST(patient_id AS TEXT)
 -- or SQLite will concatenate it correctly using || directly.
 -- Table: patients
+SELECT 'Patient ' || CAST(patient_id AS TEXT) || ' - ' || status
+FROM patients;
 
 -- -----------------------
 -- Combining Three or More Columns
@@ -76,17 +82,23 @@ FROM visits;
 -- Build a full lab result display string:
 -- 'WBC: 5.2 K/uL' by combining test_name, result_value, and unit.
 -- Table: lab_results
+SELECT test_name || ": " || result_value || ' ' || unit
+FROM lab_results;
 
 -- Exercise 9
 -- Show each trial as 'Phase II | ONC-201 Immunotherapy Study (Dept 1)'
 -- by combining phase, trial_name, and department_id.
 -- Table: trials
+SELECT phase || ' | ' || trial_name || ' ' || '(Dept ' || department_id || ')'
+FROM trials;
 
 -- Exercise 10
 -- Show each visit as a single label:
 -- 'Visit 1 | Patient 1001 | Baseline'
 -- combining visit_id, patient_id, and visit_timepoint.
 -- Table: visits
+SELECT 'Visit ' || visit_id || ' | ' || 'Patient ' || patient_id || ' | ' || visit_timepoint
+FROM visits;
 
 -- -----------------------
 -- Concatenation with a JOIN
