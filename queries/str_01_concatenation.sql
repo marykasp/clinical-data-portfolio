@@ -108,18 +108,27 @@ FROM visits;
 -- Show each trial alongside its department, formatted as:
 -- 'Oncology > ONC-201 Immunotherapy Study'
 -- Tables: trials, departments
+SELECT departments.department_name || ' > ' || trials.trial_name
+FROM trials
+JOIN departments
+  ON trials.department_id = departments.department_id;
 
 -- Exercise 12
 -- For each lab result, show:
 -- 'Patient 1001 | BNP: 210.0 pg/mL'
 -- combining patient_id, test_name, result_value, and unit.
 -- Table: lab_results
+SELECT 'Patient ' || patient_id || ' | ' || test_name || ': ' || result_value || ' ' || unit
+FROM lab_results;
 
 -- Exercise 13
 -- Show each patient with their trial name in the format:
 -- 'Patient 1001 enrolled in ONC-201 Immunotherapy Study (Active)'
 -- combining patient_id, trial_name, and status.
--- Tables: patients, trials
+SELECT 'Patient ' || patient_id || ' enrolled in ' || trial_name || ' (' || phase || ')'
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id
 
 -- -----------------------
 -- Concatenation with Aggregation
