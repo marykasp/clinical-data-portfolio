@@ -128,7 +128,7 @@ FROM lab_results;
 SELECT 'Patient ' || patient_id || ' enrolled in ' || trial_name || ' (' || phase || ')'
 FROM patients
 JOIN trials
-  ON patients.trial_id = trials.trial_id
+  ON patients.trial_id = trials.trial_id;
 
 -- -----------------------
 -- Concatenation with Aggregation
@@ -140,9 +140,17 @@ JOIN trials
 -- Hint: COUNT() returns an integer — cast it using CAST(... AS TEXT)
 -- or concatenate directly (SQLite handles the conversion).
 -- Tables: trials, patients
+SELECT trial_name || ': ' || CAST(COUNT(*) AS TEXT) || ' patients'
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY trials.trial_id, trials.trial_name;
 
 -- Exercise 15
 -- For each test name, show the test and its average result formatted as:
 -- 'BNP avg: 209.3 pg/mL'
 -- Hint: use ROUND(AVG(result_value), 1) for a clean number.
 -- Table: lab_results
+SELECT test_name || ' avg: ' || ROUND(AVG(result_value), 1) || ' ' || unit AS lab_summary
+FROM lab_results
+GROUP BY test_name;
