@@ -85,14 +85,23 @@ ORDER BY length(test_name) ASC;
 -- Find any trial names that are fewer than 20 characters long.
 -- These may be placeholder names or abbreviated entries worth reviewing.
 -- Table: trials
+SELECT trial_name
+FROM trials
+WHERE length(trial_name) < 20;
 
 -- Exercise 9
 -- Find any visit timepoints longer than 10 characters.
 -- Table: visits
+SELECT visit_timepoint
+FROM visits
+WHERE length(visit_timepoint) < 20;
 
 -- Exercise 10
 -- Find test names that are exactly 3 characters long.
 -- Table: lab_results
+SELECT test_name
+FROM lab_results
+WHERE length(test_name) = 3;
 
 -- -----------------------
 -- LENGTH with Aggregation
@@ -102,16 +111,22 @@ ORDER BY length(test_name) ASC;
 -- What is the longest trial name in the database?
 -- Return the maximum character count.
 -- Table: trials
+SELECT MAX(length(trial_name)) AS longest_trial_name
+FROM trials;
 
 -- Exercise 12
 -- What is the average character length of all trial names?
 -- Round to one decimal place.
 -- Table: trials
+SELECT AVG(length(trial_name)) AS average_trial_name_length
+FROM trials;
 
 -- Exercise 13
 -- Show the longest and shortest trial name lengths, grouped by phase.
 -- Table: trials
-
+SELECT MAX(length(trial_name)) AS longest_trial_name, 
+  MIN(length(trial_name)) AS shortest_trial_name
+FROM trials;
 -- -----------------------
 -- LENGTH with JOIN
 -- -----------------------
