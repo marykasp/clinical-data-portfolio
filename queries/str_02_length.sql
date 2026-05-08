@@ -135,9 +135,22 @@ FROM trials;
 -- Show each trial name, its character length, and its department name —
 -- ordered by trial name length descending.
 -- Tables: trials, departments
+SELECT trial_name,
+  length(trial_name) AS character_length,
+  department_name
+FROM trials
+JOIN departments
+  ON trials.department_id = departments.department_id
+ORDER BY length(trial_name) DESC; 
 
 -- Exercise 15
 -- For each department, what is the average character length
 -- of the trial names it runs?
 -- Departments with long trial names may have more complex naming conventions.
 -- Tables: trials, departments
+SELECT department_name, 
+  AVG(length(trial_name))
+FROM departments
+JOIN trials
+  ON departments.department_id = trials.department_id
+GROUP BY department_name;
