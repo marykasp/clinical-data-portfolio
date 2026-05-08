@@ -58,15 +58,24 @@ FROM lab_results;
 -- Exercise 5
 -- List all trial names ordered from longest to shortest.
 -- Table: trials
+SELECT trial_name
+FROM trials
+ORDER BY length(trial_name) DESC;
 
 -- Exercise 6
 -- List all visit timepoints ordered from shortest to longest.
 -- Helps identify abbreviated timepoints vs fully written out ones.
 -- Table: visits
+SELECT DISTINCT visit_timepoint
+FROM visits
+ORDER BY length(visit_timepoint);
 
 -- Exercise 7
 -- List all test names ordered from shortest to longest.
 -- Table: lab_results
+SELECT test_name
+FROM lab_results
+ORDER BY length(test_name) ASC;
 
 -- -----------------------
 -- Filtering with LENGTH
