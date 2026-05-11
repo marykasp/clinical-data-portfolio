@@ -115,13 +115,23 @@ FROM patients;
 -- Exercise 11
 -- Show each trial name (in lowercase) alongside its department name (in lowercase).
 -- Tables: trials, departments
+SELECT lower(trial_name), lower(department_name)
+FROM trials
+JOIN departments
+ON trials.department_id = departments.department_id;
 
 -- Exercise 12
 -- Show each lab result with test_name in lowercase,
 -- the result value, unit in lowercase, and the visit timepoint.
 -- Useful for preparing data for a case-sensitive downstream system.
 -- Tables: lab_results, visits
-
+SELECT result_value, 
+  lower(test_name), 
+  lower(unit), 
+  visit_timepoint
+FROM lab_results
+JOIN visits
+ON lab_results.visit_id = visits.visit_id;
 -- -----------------------
 -- LOWER with Aggregation
 -- -----------------------
