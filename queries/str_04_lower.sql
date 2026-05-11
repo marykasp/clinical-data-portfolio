@@ -97,12 +97,16 @@ WHERE lower(visit_timepoint) LIKE '%follow%';
 -- Hint: LOWER(trial_name) — SQLite does not have REPLACE() in scope here,
 -- so just lowercase the name and combine with trial_id.
 -- Table: trials
+SELECT trial_id || ' ' || lower(trial_name)
+FROM trials;
 
 -- Exercise 10
 -- Show each patient's record in a normalized format:
 -- 'patient_id: 1001 | status: active'
 -- with the status lowercased.
 -- Table: patients
+SELECT 'patient_id: ' || patient_id || ' | ' || 'status: ' || lower(status)
+FROM patients;
 
 -- -----------------------
 -- LOWER with JOIN
