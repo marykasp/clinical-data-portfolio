@@ -140,13 +140,27 @@ ON lab_results.visit_id = visits.visit_id;
 -- Show the count of patients per status, with the status in lowercase.
 -- Compare the output to str_03_upper.sql Exercise 13.
 -- Table: patients
+SELECT COUNT(patient_id) AS patients_per_status,
+  lower(status)
+FROM patients
+GROUP BY status;
 
 -- Exercise 14
 -- For each phase (displayed in lowercase),
 -- show the number of trials and the average target enrollment.
 -- Table: trials
+SELECT lower(phase) AS phase,
+  COUNT(trial_id) AS num_of_trials,
+  AVG(target_enrollment)
+FROM trials
+GROUP BY lower(phase);
 
 -- Exercise 15
 -- For each test name (in lowercase),
 -- show the minimum and maximum result value recorded.
 -- Table: lab_results
+SELECT lower(test_name) AS test_name,
+  MIN(result_value) AS minimum_value,
+  MAX(result_value) AS maximum_value
+FROM lab_results
+GROUP BY lower(test_name)
