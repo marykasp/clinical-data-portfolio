@@ -147,11 +147,15 @@ GROUP BY initcap(status);
 -- with its first letter capitalized and the rest lowercased.
 -- Table: patients
 -- Hint: UPPER(SUBSTR(status, 1, 1)) || LOWER(SUBSTR(status, 2))
+SELECT upper(substr(status, 1, 1)) || lower(substr(status, 2))
+FROM patients;
 
 -- Exercise 13
 -- Using the SQLite workaround, show each test name
 -- with first-letter capitalization.
 -- Table: lab_results
+SELECT upper(substring(test_name, 1, 1)) || lower(substr(test_name, 2))
+FROM lab_results;
 
 -- Exercise 14
 -- Using the SQLite workaround, show each department name
