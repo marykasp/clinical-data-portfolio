@@ -44,7 +44,7 @@ FROM patients;
 -- Table: visits
 SELECT visit_id,
   strftime('%Y', visit_date) AS year_of_visit
-FROM visits
+FROM visits;
 
 -- -----------------------
 -- Extracting Month
@@ -54,15 +54,24 @@ FROM visits
 -- Show each patient_id alongside the month number of their enrollment date.
 -- Month is returned as '01'–'12'.
 -- Table: patients
+SELECT patient_id,
+  strftime('%m', enrollment_date)
+FROM patients;
 
 -- Exercise 5
 -- Show each visit alongside the month number it occurred in.
 -- Table: visits
+SELECT visit_id,
+  strftime('%m', visit_date)
+FROM visits;
 
 -- Exercise 6
 -- Show each trial name alongside the month number it started.
 -- Trials starting mid-year may have had delayed regulatory approvals.
 -- Table: trials
+SELECT trial_name,
+  strftime('%m', start_date)
+FROM trials;
 
 -- -----------------------
 -- Extracting Day
@@ -71,11 +80,18 @@ FROM visits
 -- Exercise 7
 -- Show each visit alongside the day of the month it took place.
 -- Table: visits
+SELECT visit_id,
+  strftime('%d', visit_date)
+FROM visits;
 
 -- Exercise 8
 -- Show each patient_id and enrollment date alongside
 -- the day of the month they were enrolled.
 -- Table: patients
+SELECT patient_id,
+  enrollment_date,
+  strftime('%d', enrollment_date)
+FROM patients;
 
 -- -----------------------
 -- Year-Month Combined
@@ -88,10 +104,16 @@ FROM visits
 -- Show each visit alongside its year-month.
 -- A visit on 2024-03-15 should display '2024-03'.
 -- Table: visits
+SELECT visit_id,
+  strftime('%Y-%m', visit_date)
+FROM visits;
 
 -- Exercise 10
 -- Show each patient_id alongside their enrollment year-month.
 -- Table: patients
+SELECT patient_id,
+  strftime('%Y-%m', enrollment_date)
+FROM patients;
 
 -- -----------------------
 -- Day of Week
@@ -102,6 +124,9 @@ FROM visits
 -- Exercise 11
 -- Show each visit alongside the numeric day of the week it occurred on.
 -- Table: visits
+SELECT visit_id,
+  strftime('%w', visit_date) AS day_of_week
+FROM visits;
 
 -- Exercise 12
 -- Show each visit alongside a readable day name instead of a number.
