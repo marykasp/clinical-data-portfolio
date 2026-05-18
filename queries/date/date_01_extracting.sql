@@ -133,7 +133,7 @@ FROM visits;
 -- 0 → 'Sunday', 1 → 'Monday', ..., 6 → 'Saturday'
 -- Table: visits
 -- Hint: CASE strftime('%w', visit_date) WHEN '0' THEN 'Sunday' ... END
-
+--TODO: don't know WHEN clauses yet come back to finish
 -- -----------------------
 -- Extracting Date Parts with a JOIN
 -- -----------------------
@@ -141,12 +141,33 @@ FROM visits;
 -- Exercise 13
 -- Show each patient's enrollment year alongside their trial name and phase.
 -- Tables: patients, trials
+SELECT patient_id,
+  strftime('%Y', enrollment_date) AS enrollment_year,
+  trial_name,
+  phase
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 14
 -- Show each visit's year and month alongside the name of the
 -- trial the patient is enrolled in.
 -- Tables: visits, patients, trials
+SELECT trial_name,
+  strftime('%Y-%m', visit_date) AS visit_date,
+  patients.patient_id
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+JOIN visits
+  ON patients.patient_id = visits.patient_id;
 
 -- Exercise 15
 -- Show each trial name, its start year, and its department name.
 -- Tables: trials, departments
+SELECT trial_name,
+  strftime('%Y', start_date) AS start_year,
+  department_name
+FROM trials
+JOIN departments
+  ON trials.department_id = departments.department_id;
