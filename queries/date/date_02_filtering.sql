@@ -111,21 +111,33 @@ WHERE enrollment_date BETWEEN '2023-07-01' AND '2023-12-31';
 -- Show all trials that have already started
 -- (start_date is before or on today).
 -- Table: trials
+SELECT trial_id AS already_started
+FROM trials
+WHERE start_date <= date('now');
 
 -- Exercise 11
 -- Show all trials that have not started yet
 -- (start_date is in the future).
 -- Table: trials
+SELECT trial_name AS trials_in_future
+FROM trials
+WHERE start_date > date('now');
 
 -- Exercise 12
 -- Show all patients who enrolled within the last 180 days.
 -- In a real program these are patients in early treatment phases.
 -- Table: patients
 -- Hint: enrollment_date >= date('now', '-180 days')
+SELECT patient_id
+FROM patients
+WHERE enrollment_date >= date('now', '-180 days');
 
 -- Exercise 13
 -- Show all visits that occurred in the last 90 days.
 -- Table: visits
+SELECT visit_id
+FROM visits
+WHERE visit_date >= date('now', '-90 days');
 
 -- -----------------------
 -- Date Filtering with a JOIN
@@ -134,9 +146,24 @@ WHERE enrollment_date BETWEEN '2023-07-01' AND '2023-12-31';
 -- Exercise 14
 -- Show all patients who enrolled in 2024, alongside their trial name.
 -- Tables: patients, trials
+SELECT patients.patient_id,
+  trial_name
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE strftime('%Y', enrollment_date) = '2024';
 
 -- Exercise 15
 -- Show all visits that occurred in the second half of 2023
 -- (July through December), alongside the visit timepoint
 -- and the name of the trial the patient is enrolled in.
 -- Tables: visits, patients, trials
+SELECT visit_id,
+  visit_timepoint,
+  trial_name
+FROM visits
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+WHERE visit_date BETWEEN '2023-07-01' AND '2023-12-31';
