@@ -69,22 +69,35 @@ WHERE strftime('%m', enrollment_date) IN ('01', '02', '03');
 -- Show all patients who enrolled on or after 2024-06-01.
 -- These are the most recently onboarded patients in the program.
 -- Table: patients
+SELECT patient_id AS patients_enrolled_after
+FROM patients
+WHERE enrollment_date >= '2024-06-01';
 
 -- Exercise 7
 -- Show all trials that started before 2023-01-01.
 -- These are the longest-running trials in the program.
 -- Table: trials
+SELECT trial_name AS longest_running,
+  trial_id
+FROM trials
+WHERE start_date < '2023-01-01';
 
 -- Exercise 8
 -- Show all visits that occurred between 2024-01-01 and 2024-06-30.
 -- This covers the first half of 2024.
 -- Table: visits
 -- Hint: BETWEEN '2024-01-01' AND '2024-06-30'
+SELECT visit_id
+FROM visits
+WHERE visit_date BETWEEN '2024-01-01' AND '2024-06-30';
 
 -- Exercise 9
 -- Show all patients who enrolled between 2023-07-01 and 2023-12-31
 -- (the second half of 2023).
 -- Table: patients
+SELECT patient_id AS enrolled_second_half_2023
+FROM patients
+WHERE enrollment_date BETWEEN '2023-07-01' AND '2023-12-31';
 
 -- -----------------------
 -- Filtering Relative to Today
