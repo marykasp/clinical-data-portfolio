@@ -68,12 +68,26 @@ FROM visits;
 -- A long gap may indicate a late-presenting patient.
 -- Tables: visits, patients
 -- Hint: julianday(visit_date) - julianday(enrollment_date)
+SELECT enrollment_date,
+  CAST(julianday(visit_date) - julianday(enrollment_date) AS INTEGER) AS days_after_enrollment
+FROM patients
+JOIN visits
+  ON patients.patient_id = visits.patient_id;
 
 -- Exercise 5
 -- What is the earliest visit for each patient,
 -- and how many days after enrollment did it occur?
 -- Tables: visits, patients
 -- Hint: MIN(visit_date) per patient, then compute the gap
+SELECT patients.patient_id,
+  enrollment_date,
+  MIN(visit_date) AS first_visit_date,
+  CAST(julianday(MIN(visit_date)) - julianday(enrollment_date) AS INTEGER) AS days_to_first_visit
+FROM visits
+JOIN patients
+  ON visits.patient_id = patients.patient_id
+GROUP BY patients.patient_id, enrollment_date
+ORDER BY 4 DESC;
 
 -- -----------------------
 -- Adding and Subtracting Intervals
