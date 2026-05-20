@@ -98,22 +98,36 @@ ORDER BY 4 DESC;
 -- This approximates when a Phase I trial might expect first results.
 -- Table: trials
 -- Hint: date(start_date, '+6 months')
+SELECT trial_id,
+  trial_name,
+  start_date,
+  date(start_date, '+6 months') AS six_months_after_start
+FROM trials;
 
 -- Exercise 7
 -- For each patient, what date is 30 days after their enrollment date?
 -- In many protocols, the 30-day mark is when the first
 -- post-baseline safety assessment is due.
 -- Table: patients
+SELECT patient_id,
+  date(enrollment_date, '+30 days')
+FROM patients;
 
 -- Exercise 8
 -- For each visit, what was the date 7 days before it?
 -- This represents a pre-visit preparation window.
 -- Table: visits
+SELECT visit_id,
+  date(visit_date, '-7 days') AS pre_visit_window
+FROM visits;
 
 -- Exercise 9
 -- For each patient, what date is 1 year after their enrollment date?
 -- Patients still active at this point would need annual protocol renewals.
 -- Table: patients
+SELECT patient_id,
+  date(enrollment_date, '+1 year') AS one_year_active
+FROM patients;
 
 -- -----------------------
 -- Identifying Overdue or Late Events
