@@ -139,6 +139,9 @@ FROM patients;
 -- Table: patients
 -- Hint: julianday('now') - julianday(enrollment_date) > 365
 --       AND status = 'Active'
+SELECT patient_id
+FROM patients
+WHERE status = 'Active' AND julianday('now') - julianday(enrollment_date) > 365;
 
 -- Exercise 11
 -- Which trials started more than 2 years ago?
@@ -146,6 +149,11 @@ FROM patients;
 -- protocol amendments or recruitment reviews.
 -- Table: trials
 -- Hint: julianday('now') - julianday(start_date) > 730
+SELECT trial_id,
+  trial_name,
+  start_date
+FROM trials
+WHERE start_date > date('now', '-2 years');
 
 -- Exercise 12
 -- Which patients enrolled more than 90 days ago but have no visits
@@ -155,6 +163,14 @@ FROM patients;
 -- Tables: patients, visits
 -- Hint: LEFT JOIN visits, filter where julianday('now') - julianday(enrollment_date) > 90,
 --       then look for patients where the MAX(visit_date) is close to enrollment
+
+SELECT patients.patient_id,
+  enrollment_date,
+  visit_id
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+WHERE julianday('now') - julianday(enrollment_date) > 90;
 
 -- -----------------------
 -- Date Arithmetic with Aggregation
@@ -166,6 +182,17 @@ FROM patients;
 -- A long average gap may indicate scheduling delays at the site.
 -- Tables: patients, visits
 -- Hint: GROUP BY trial_id, average of (julianday(MIN visit_date) - julianday(enrollment_date))
+--!IMPORTANT: fix arithmetic with aggregation not working for first visit date
+-- SELECT trial_name,
+--   julianday(MIN(visit_date)) - julianday(enrollment_date) AS days,
+--   AVG(julianday(MIN(visit_date)) - julianday(enrollment_date)) AS average_no_days
+-- FROM trials
+-- JOIN patients
+--   ON patients.trial_id = trials.trial_id
+-- JOIN visits
+--   ON patients.patient_id = visits.patient_id
+-- GROUP BY trial_name;
+
 
 -- Exercise 14
 -- For each trial, show the earliest enrollment date and the latest enrollment date,
@@ -173,3 +200,12 @@ FROM patients;
 -- A wide window means enrollment has been open for a long time.
 -- Tables: patients, trials
 -- Hint: julianday(MAX(enrollment_date)) - julianday(MIN(enrollment_date))
+SELECT trials.trial_id,
+  trial_name,
+  MIN(enrollment_date) AS earliest_enrollment_date,
+  MAX(enrollment_date) AS latest_enrollment_date,
+  julianday(MAX(enrollment_date)) - julianday(MIN(enrollment_date)) AS total_enrollment_window
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY trials.trial_id, trial_name;
