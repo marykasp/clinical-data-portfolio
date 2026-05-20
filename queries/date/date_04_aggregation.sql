@@ -189,6 +189,15 @@ GROUP BY phase;
 -- For each department, how many patient enrollments have occurred
 -- per year? Show department name, year, and count.
 -- Tables: patients, trials, departments
+SELECT department_name,
+  strftime('%Y', enrollment_date) AS enrollment_year,
+  COUNT(*) AS patient_enrollments
+FROM departments
+JOIN trials
+  ON departments.department_id = trials.department_id
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY department_name, 2;
 
 -- Exercise 15
 -- For each trial, show the trial name, year it started,
@@ -196,3 +205,11 @@ GROUP BY phase;
 -- Trials with no recent enrollment activity may have
 -- stalled recruitment.
 -- Tables: trials, patients
+SELECT trial_name,
+  strftime('%Y', start_date) AS start_year,
+  COUNT(*) AS num_patients_enrolled,
+  MAX(enrollment_date)
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY trial_name, 2;
