@@ -84,12 +84,26 @@ HAVING COUNT(*) > 2;
 -- Show patient_id, enrollment_date, days since enrollment,
 -- and their most recent visit date.
 -- Tables: patients, visits
+SELECT patients.patient_id,
+  enrollment_date,
+  julianday(MAX(visit_date)) - julianday(enrollment_date) AS days_since_enrollment,
+  MAX(visit_date)
+FROM patients
+JOIN visits
+  ON patients.patient_id = visits.patient_id
+WHERE status = 'Active'
+GROUP BY patients.patient_id
+HAVING COUNT(visit_id) > 1; 
 
 -- Exercise 5
 -- For each trial, how many days has it been running
 -- (from start_date to today)?
 -- Only show trials that have been running for more than 500 days.
 -- Table: trials
+SELECT trial_name,
+  julianday('now') - julianday(start_date) AS days_running
+FROM trials
+GROUP BY trial_name;
 
 -- Exercise 6
 -- Which patients had their first visit more than 60 days
@@ -97,6 +111,15 @@ HAVING COUNT(*) > 2;
 -- A long delay to first visit may indicate a scheduling problem.
 -- Show patient_id, enrollment_date, first visit date, and the gap in days.
 -- Tables: patients, visits
+SELECT patients.patient_id,
+  enrollment_date,
+  MIN(visit_date) AS first_visit_date,
+  julianday(enrollment_date) - julianday(MIN(visit_date))
+FROM patients
+JOIN visits 
+  ON patients.patient_id = visits.patient_id
+GROUP BY patients.patient_id
+HAVING MIN(visit_date) > 60; 
 
 -- -----------------------
 -- Filtering + Aggregation
@@ -106,11 +129,24 @@ HAVING COUNT(*) > 2;
 -- For each trial, how many patients enrolled in 2024?
 -- Only show trials with at least 2 enrollments in 2024.
 -- Tables: trials, patients
+SELECT trial_name,
+  COUNT(*) AS patients_enrolled
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+WHERE strftime('%Y', enrollment_date) = '2024'
+GROUP BY trial_name
+HAVING COUNT(*) > 2;
 
 -- Exercise 8
 -- Which months had the highest visit counts in 2023?
 -- Show year-month and visit count, ordered from busiest to quietest.
 -- Table: visits
+SELECT strftime('%Y-%m', visit_date) AS visit_year_month,
+  COUNT(*) AS visit_count
+FROM visits
+GROUP BY strftime('%m', visit_date)
+ORDER BY COUNT(*) DESC;
 
 -- Exercise 9
 -- For each trial phase, what is the average number of days
