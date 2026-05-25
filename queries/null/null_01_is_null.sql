@@ -119,17 +119,42 @@ WHERE department_id IS NOT NULL;
 -- their baseline appointment.
 -- Tables: patients, visits
 -- Hint: FROM patients LEFT JOIN visits ... WHERE visits.visit_id IS NULL
+SELECT patients.patient_id
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+WHERE visits.visit_id IS NULL;
+
+-- SELECT patients.patient_id,
+--   visits.visit_id
+-- FROM patients
+-- LEFT JOIN visits
+--   ON patients.patient_id = visits.patient_id;
 
 -- Exercise 10
 -- Which trials have no patients enrolled yet?
 -- Tables: trials, patients
 -- Hint: FROM trials LEFT JOIN patients ... WHERE patients.patient_id IS NULL
+SELECT trials.trial_name,
+  trials.trial_id
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+WHERE patients.patient_id IS NULL;
 
 -- Exercise 11
 -- Which trials have no adverse events reported across any of their patients?
 -- Tables: trials, patients, adverse_events
 -- Hint: LEFT JOIN patients, then LEFT JOIN adverse_events,
 --       WHERE adverse_events.ae_id IS NULL
+SELECT trials.trial_name,
+  trials.trial_id
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+LEFT JOIN adverse_events
+  ON patients.patient_id = adverse_events.patient_id
+WHERE adverse_events.ae_id IS NULL;
 
 -- -----------------------
 -- IS NULL with Aggregation
@@ -139,11 +164,23 @@ WHERE department_id IS NOT NULL;
 -- How many adverse events are still ongoing (unresolved)?
 -- Table: adverse_events
 -- Hint: COUNT(*) WHERE resolution_date IS NULL
+SELECT COUNT(*) AS no_adverse_events
+FROM adverse_events
+WHERE resolution_date IS NULL;
 
 -- Exercise 13
 -- For each trial, how many patients have no visits yet?
 -- Show trial name and the count of visit-less patients.
 -- Tables: trials, patients, visits
+SELECT COUNT(*) AS patients_no_visits,
+  trials.trial_name
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+WHERE visits.visit_id IS NULL
+GROUP BY trials.trial_name;
 
 -- Exercise 14
 -- How many adverse events were reported between visits
@@ -152,3 +189,9 @@ WHERE department_id IS NOT NULL;
 -- Table: adverse_events
 -- Hint: COUNT(visit_id) counts non-NULLs only;
 --       COUNT(*) - COUNT(visit_id) gives the NULL count
+SELECT 
+  COUNT(visit_id) AS linked_to_visit,
+  COUNT(*) - COUNT(visit_id) AS not_linked_to_visit,
+  visit_id
+FROM adverse_events
+GROUP BY visit_id
