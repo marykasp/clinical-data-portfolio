@@ -149,12 +149,21 @@ FROM trials;
 -- Show patient_id, and the days since last activity.
 -- Tables: patients, visits
 -- Hint: julianday('now') - julianday(COALESCE(MAX(visit_date), enrollment_date))
+SELECT patients.patient_id,
+  julianday('now') - julianday(COALESCE(MAX(visits.visit_date), enrollment_date)) AS days_passed
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+GROUP BY patients.patient_id;
 
 -- Exercise 11
 -- For each trial, calculate how long it has been running in days.
 -- Use end_date if the trial has closed, otherwise use today.
 -- Table: trials
 -- Hint: julianday(COALESCE(end_date, date('now'))) - julianday(start_date)
+SELECT trial_name,
+  julianday(COALESCE(end_date, date('now'))) - julianday(start_date)
+FROM trials;
 
 -- -----------------------
 -- COALESCE with Aggregation and GROUP BY
@@ -165,9 +174,25 @@ FROM trials;
 -- Display 'Unassigned' where department_name is NULL.
 -- Tables: trials, departments
 -- Hint: LEFT JOIN departments, GROUP BY COALESCE(department_name, 'Unassigned')
+SELECT COALESCE(departments.department_name, 'Unassigned') AS department_name
+  COUNT(*) AS no_trials
+FROM trials
+LEFT JOIN departments
+  ON trials.department_id = departments.department_id
+GROUP BY COALESCE(departments.department_name, 'Unassigned');
 
 -- Exercise 13
 -- For each trial, show the trial name, total adverse events reported,
 -- and the number of those that are still ongoing.
 -- Replace NULL resolution counts with 0.
 -- Tables: trials, patients, adverse_events
+SELECT trials.trial_name,
+  COUNT(adverse_events.ae_id) AS reported_events,
+
+FROM trials
+JOIN patients
+  ON trials.trial_id = patients.trial_id
+LEFT JOIN adverse_events
+  ON patients.patient_id = adverse_events.patient_id
+GROUP BY trials.trial_name;
+  
