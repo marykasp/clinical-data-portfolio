@@ -133,11 +133,34 @@ FROM trials;
 -- Show each patient alongside a translated status label
 -- and the name of the trial they are enrolled in.
 -- Tables: patients, trials
+SELECT patients.patient_id,
+  trial_name,
+  CASE patients.status
+    WHEN 'Active' THEN 'Currently Participating'
+    WHEN 'Completed' THEN 'Finished Protocol'
+    WHEN 'Withdrawn' THEN 'Left Study Early'
+    WHEN 'Screen Failure' THEN 'Did Not Qualify'
+  END
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 8
 -- Show each adverse event with the translated serious label
 -- and the name of the trial the patient is enrolled in.
 -- Tables: adverse_events, patients, trials
+SELECT ae_id,
+  ae_term,
+  trial_name,
+  CASE serious
+    WHEN 1 THEN 'SAE - Regulatory Reporting Required'
+    WHEN 0 THEN 'Non-Serious'
+  END
+FROM adverse_events
+JOIN patients
+  ON adverse_events.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 9
 -- Show each lab result with the flag translated into
@@ -148,6 +171,15 @@ FROM trials;
 --   Critical → '!! Critical'
 -- Include the test name, result value, and unit.
 -- Table: lab_results
+SELECT result_value,
+  test_name,
+  CASE flag
+    WHEN 'Normal' THEN 'OK'
+    WHEN 'Low' THEN '↓ Below Range'
+    WHEN 'High' THEN '↑ Above Range'
+    WHEN 'Critical' THEN '!! Critical'
+  END
+FROM lab_results;
 
 -- -----------------------
 -- Simple CASE with Aggregation
