@@ -191,15 +191,43 @@ FROM lab_results;
 -- counts for Active, Completed, Withdrawn, and Screen Failure.
 -- Hint: SUM(CASE status WHEN 'Active' THEN 1 ELSE 0 END)
 -- Tables: patients, trials
+SELECT trial_name,
+  SUM(CASE p.status WHEN 'Active' THEN 1 ELSE 0 END),
+  SUM(CASE p.status WHEN 'Completed' THEN 1 ELSE 0 END),
+  SUM(CASE p.status WHEN 'Withdrawn' THEN 1 ELSE 0 END),
+  SUM(CASE p.status WHEN 'Screen Failure' THEN 1 ELSE 0 END)
+FROM trials
+JOIN patients AS p
+  ON trials.trial_id = p.trial_id
+GROUP BY trial_name;
 
 -- Exercise 11
 -- Count how many adverse events are SAEs vs non-serious,
 -- grouped by trial.
 -- Hint: SUM(CASE serious WHEN 1 THEN 1 ELSE 0 END) AS sae_count
 -- Tables: adverse_events, patients, trials
+SELECT trial_name,
+  SUM(CASE WHEN serious = 1 THEN 1 ELSE 0 END) AS sae_count,
+  SUM(CASE WHEN serious = 0 THEN 1 ELSE 0 END) AS non_serious_count
+FROM adverse_events
+JOIN patients
+  ON adverse_events.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+GROUP BY trial_name;
 
--- Exercise 12
--- For each lab result flag value, count how many results
+-- Exercise 12 -- For each lab result flag value, count how many results
 -- carry that flag, using a translated label as the group name.
 -- Show: flag label, count
 -- Table: lab_results
+SELECT flag,
+  CASE flag
+    WHEN 'Normal'   THEN 'Within Normal Range'
+    WHEN 'Low'      THEN '↓ Below Normal Range'
+    WHEN 'High'     THEN '↑ Above Normal Range'
+    WHEN 'Critical' THEN '!! Critical Value'
+    ELSE 'Unknown'
+  END          AS flag_label,
+  COUNT(*) AS result_count
+FROM lab_results
+GROUP BY flag;
