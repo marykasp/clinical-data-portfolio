@@ -74,12 +74,23 @@ FROM trials;
 -- For patients who have never had a visit, display 'No visits yet'.
 -- Tables: patients, visits
 -- Hint: LEFT JOIN visits, then COALESCE(MAX(visit_date), 'No visits yet')
+SELECT patients.patient_id,
+  COALESCE(CAST(MAX(visit_date) AS TEXT), 'No visits yet')
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+GROUP BY patients.patient_id;
 
 -- Exercise 6
 -- Show all trials with their department name.
 -- For the trial with no department assigned, display 'Unassigned'.
 -- Tables: trials, departments
 -- Hint: LEFT JOIN departments, COALESCE(department_name, 'Unassigned')
+SELECT trials.trial_name,
+  COALESCE(department_name, 'Unassigned')
+FROM trials
+LEFT JOIN departments
+  ON trials.department_id = departments.department_id;
 
 -- Exercise 7
 -- Show all trials with their total patient count.
@@ -88,6 +99,12 @@ FROM trials;
 -- Hint: COALESCE(COUNT(patients.patient_id), 0)
 --       Note: COUNT on a column already returns 0 for no matches —
 --       this exercise shows when COALESCE is and isn't needed here.
+SELECT trials.trial_name,
+  COALESCE(COUNT(patients.patient_id), 0)
+FROM trials
+LEFT JOIN patients
+  ON trials.trial_id = patients.trial_id
+GROUP BY trials.trial_name;
 
 -- -----------------------
 -- COALESCE with multiple fallback values
@@ -102,6 +119,9 @@ FROM trials;
 -- otherwise display 'No timing recorded'.
 -- Table: adverse_events
 -- Hint: COALESCE(CAST(visit_id AS TEXT), CAST(onset_date AS TEXT), 'No timing recorded')
+SELECT ae_id,
+  COALESCE(CAST(visit_id AS TEXT), CAST(onset_date AS TEXT), 'No timing recorded')
+FROM adverse_events;
 
 -- Exercise 9
 -- For each trial, show its end_date if it has one,
@@ -109,6 +129,10 @@ FROM trials;
 -- labelled as the 'key_date'.
 -- Table: trials
 -- Hint: COALESCE(end_date, start_date) AS key_date
+SELECT trial_id,
+  trial_name,
+  COALESCE(end_date, start_date) AS key_date
+FROM trials;
 
 -- -----------------------
 -- COALESCE in calculations
