@@ -168,6 +168,15 @@ GROUP BY patients.patient_id;
 --   status = 'Screen Failure'          → 'Not Enrolled'
 --   ELSE                               → 'Standard'
 -- Table: patients
+SELECT patient_id,
+  CASE
+    WHEN age >= 75 AND status = 'Active' THEN 'High Risk - Elderly Active'
+    WHEN age >= 65 AND status = 'Active' THEN 'Elevated Risk - Senior Active'
+    WHEN status = 'Withdrawn' THEN 'Dropout'
+    WHEN status = 'Screen Failure' THEN 'Not Enrolled'
+    ELSE 'Standard'
+  END AS enrollment_risk_level
+FROM patients;
 
 -- Exercise 10
 -- Classify each adverse event's urgency level
@@ -177,6 +186,17 @@ GROUP BY patients.patient_id;
 --   severity = 'Grade 2'                 → 'Monitor Closely'
 --   ELSE                                 → 'Routine'
 -- Table: adverse_events
+SELECT ae_id,
+  patient_id,
+  severity,
+  serious,
+  CASE
+    WHEN serious = 1 THEN 'URGENT-SAE'
+    WHEN severity IN ('Grade 3', 'Grade 4') THEN 'High Priority'
+    WHEN severity = 'Grade 2' THEN 'Monitor Closely'
+    ELSE 'Routine'
+  END AS urgency_level
+FROM adverse_events;
 
 -- Exercise 11
 -- Classify each lab result's clinical interpretation
@@ -187,6 +207,16 @@ GROUP BY patients.patient_id;
 --   result_value > reference_range_high           → 'Above Normal'
 --   ELSE                                          → 'Within Range'
 -- Table: lab_results
+SELECT result_value,
+  test_name,
+  CASE
+    WHEN result_value < reference_range_low * 0.5 THEN 'Critically Low'
+    WHEN result_value < reference_range_low THEN 'Below Normal'
+    WHEN result_value > reference_range_high * 0.5 THEN 'Critically High'
+    WHEN result_value > reference_range_high THEN 'Above Normal'
+    ELSE 'Within Range'
+  END AS clinical_interpretation
+FROM lab_results;
 
 -- -----------------------
 -- Searched CASE with JOIN
