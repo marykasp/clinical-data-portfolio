@@ -226,11 +226,37 @@ FROM lab_results;
 -- Show each patient with their age group label and their trial name.
 -- Only include Active patients.
 -- Tables: patients, trials
+SELECT patient_id,
+trial_name,
+  CASE 
+    WHEN age < 40 THEN 'Young Adult'
+    WHEN age BETWEEN 40 AND 64 THEN 'Middle_Aged'
+    WHEN age >= 65 THEN 'Older Adult'
+  END AS age_group
+FROM patients
+JOIN trials
+  ON patients.trial_id = trials.trial_id;
 
 -- Exercise 13
 -- Show each adverse event with its urgency label (from Exercise 10)
 -- alongside the patient's trial name and arm name.
 -- Tables: adverse_events, patients, trials, trial_arms
+SELECT ae_id,
+  trial_name,
+  arm_name,
+  CASE
+    WHEN serious = 1 THEN 'URGENT-SAE'
+    WHEN severity IN ('Grade 3', 'Grade 4') THEN 'High Priority'
+    WHEN severity = 'Grade 2' THEN 'Monitor Closely'
+    ELSE 'Routine'
+  END AS urgency_label
+FROM adverse_events
+JOIN patients
+  ON adverse_events.patient_id = patients.patient_id
+JOIN trials
+  ON patients.trial_id = trials.trial_id
+JOIN trial_arms
+  ON trials.trial_id = trial_arms.trial_id;
 
 -- -----------------------
 -- Searched CASE with ORDER BY
