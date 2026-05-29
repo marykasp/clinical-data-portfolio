@@ -115,6 +115,13 @@ FROM trials;
 --   start_date > date('now')      → 'Not Yet Started'
 --   ELSE                          → 'Active'
 -- Table: trials
+SELECT trial_name,
+  CASE
+    WHEN end_date IS NOT NULL THEN 'Closed'
+    WHEN start_date > date('now') THEN 'Not Yet Started'
+    ELSE 'Active'
+  END AS trial_current_status
+FROM trials;
 
 -- Exercise 7
 -- For each adverse event, classify its resolution state:
@@ -123,13 +130,30 @@ FROM trials;
 --   resolution_date IS NULL                 → 'Ongoing'
 --   ELSE                                    → 'Resolved'
 -- Table: adverse_events
+SELECT ae_id,
+  CASE
+    WHEN resolution_date IS NULL AND onset_date < date('now', '-90 days') THEN 'Long-Running - Review Required'
+    WHEN resolution_date IS NULL THEN 'Ongoing'
+    ELSE 'Resolved'
+  END AS resolution_state
+FROM adverse_events;
 
--- Exercise 8
--- For each patient, classify their visit history:
+-- Exercise 8 -- For each patient, classify their visit history:
 --   No visits at all (use LEFT JOIN)    → 'Pre-Baseline'
 --   Only one visit                      → 'Baseline Only'
 --   More than one visit                 → 'In Treatment'
 -- Tables: patients, visits
+SELECT patients.patient_id,
+  CASE
+    WHEN COUNT(visit_id) = 0 THEN 'Pre-Baseline'
+    WHEN COUNT(visit_id) = 1 THEN 'Baseline Only'
+    ELSE 'In Treatment'
+  END AS visit_history
+FROM patients
+LEFT JOIN visits
+  ON patients.patient_id = visits.patient_id
+GROUP BY patients.patient_id;
+
 
 -- -----------------------
 -- Multi-column conditions
