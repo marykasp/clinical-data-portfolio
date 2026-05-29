@@ -271,6 +271,19 @@ JOIN trial_arms
 -- Show ae_term, severity, and onset_date.
 -- Table: adverse_events
 -- Hint: ORDER BY CASE severity WHEN 'Grade 4' THEN 1 WHEN 'Grade 3' THEN 2 ...
+SELECT ae_term,
+  severity,
+  onset_date
+FROM adverse_events
+ORDER BY
+  CASE severity
+    WHEN 'Grade 4' THEN 1
+    WHEN 'Grade 3' THEN 2
+    WHEN 'Grade 2' THEN 3
+    WHEN 'Grade 1' THEN 4
+    ELSE 5
+  END;
+
 
 -- Exercise 15
 -- List all trials ordered by status priority:
@@ -280,3 +293,13 @@ JOIN trial_arms
 --   then Completed last.
 -- Show trial name and status.
 -- Table: trials
+SELECT trial_name,
+  status
+FROM trials
+ORDER BY
+  CASE status
+    WHEN 'On Hold' THEN 1
+    WHEN 'Enrolling' THEN 2
+    WHEN 'Not Yet Open' THEN 3
+    WHEN 'Completed' THEN 4
+  END;
